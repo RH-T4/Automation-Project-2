@@ -39,7 +39,7 @@ describe('Issue deleting', () => {
         
     });
     
-    it.only('Assignment 3 TASK 2 ', () => {
+    it('Assignment 3 TASK 2 ', () => {
         getIssueDetailsModal()
           .find('[data-testid="icon:trash"]')
           .click();
