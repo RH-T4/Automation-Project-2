@@ -27,7 +27,7 @@ describe('Issue comments creating, editing and deleting', () => {
         });
     });
 
-    it.only('Should create,edit and delete comment successfully', () => {
+    it.only('Assignment 1 - create,edit and delete comment successfully', () => {
         const comment = 'TEST_COMMENT';
         const comment_edited = 'TEST_COMMENT_EDITED';
 
@@ -38,6 +38,15 @@ describe('Issue comments creating, editing and deleting', () => {
             cy.contains('button', 'Save').click().should('not.exist');
             cy.contains('Add a comment...').should('exist');
             cy.get('[data-testid="issue-comment"]').should('contain', comment);
+            // Store the initial length of the comments array
+            const initialLength = comment.length;
+            // Assert that the comment is added by checking the updated length of the comments array
+            const newLength = comment.length;
+            if (newLength === initialLength + 1) {
+            console.log("Comment added successfully!");
+            } else {
+             console.error("Comment addition failed!");
+    }
 
             //edit comment
             cy.get('[data-testid="issue-comment"]').first().contains('Edit')
@@ -47,14 +56,43 @@ describe('Issue comments creating, editing and deleting', () => {
             cy.contains('button', 'Save').click().should('not.exist');
             cy.get('[data-testid="issue-comment"]').should('contain', 'Edit')
                 .and('contain', comment_edited);
-
+            // Function to edit a comment
+            function editComment(index, newComment) {
+                if (index >= 0 && index < comment.length) {
+                    comments[index] = newComment;
+                 }
+            }
+            // Function to assert that a comment is updated and visible
+            function assertCommentUpdate(index, expectedComment) {
+                const updatedComment = comments[index];
+                if (updatedComment === expectedComment) {
+                    console.log("Comment update successful. Updated comment:", updatedComment);
+                } else {
+                    console.error("Comment update failed. Expected:", expectedComment, "Actual:", updatedComment);
+                }
+            }
             //delete comment
             cy.contains('Delete').click();
         });
 
             cy.get('[data-testid="modal:confirm"]').contains('button', 'Delete comment')
-                .click().should('not.exist');
+            .click().should('not.exist');
             getIssueDetailsModal().contains(comment_edited).should('not.exist');
+            // Function to remove a comment
+            function removeComment(index) {
+                if (index >= 0 && index < comment.length) {
+                    comment.splice(index, 1);
+                }
+            }
+            
+            // Function to assert that a comment is removed and not visible
+            function assertCommentRemoved(index) {
+                if (index >= 0 && index < comment.length) {
+                    console.error("Comment removal failed. Comment still exists:", comments[index]);
+                } else {
+                    console.log("Comment removal successful. Comment is no longer visible.");
+                }
+            }     
 
     });
 
